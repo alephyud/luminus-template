@@ -4,7 +4,6 @@
             [secretary.core :as secretary :include-macros true]
             [goog.events :as events]
             [goog.history.EventType :as HistoryEventType]
-            [markdown.core :refer [md->html]]
             [<<project-ns>>.ajax :refer [load-interceptors!]]
             [ajax.core :refer [GET POST]])
   (:import goog.History))
@@ -39,8 +38,7 @@
   [:div.container
    (when-let [docs (session/get :docs)]
      [:div.row>div.col-sm-12
-      [:div {:dangerouslySetInnerHTML
-             {:__html (md->html docs)}}]])])
+      [:div {:dangerouslySetInnerHTML {:__html docs}}]])])
 
 (def pages
   {:home #'home-page

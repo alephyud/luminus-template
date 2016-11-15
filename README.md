@@ -4,6 +4,16 @@ A Leiningen template for projects using [Luminus](http://www.luminusweb.net/).
 
 The template initializes a base Luminus application.
 
+## TAILORED
+
+This template differs from the master Luminus template in the following
+aspects:
+
+* Does not include the default Selmer templates. Hiccup views are used instead
+* Includes some basic internationalization templates
+* TBD: customizable Bootstrap, using WebJars or NPM
+* Uses `txtmark` and **[JS lib to come]** instead of `markdown-clj`
+
 ## Requirements
 
 Luminus requires Leiningen version 2.5.3+

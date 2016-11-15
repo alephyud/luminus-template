@@ -1,7 +1,7 @@
 (ns <<project-ns>>.middleware
   (:require [<<project-ns>>.env :refer [defaults]]<% if not service %>
             [clojure.tools.logging :as log]
-            [<<project-ns>>.layout :refer [*app-context* error-page]]
+            [<<project-ns>>.views.layout :refer [*app-context* error-page]]
             [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
             [ring.middleware.webjars :refer [wrap-webjars]]
             [ring.middleware.format :refer [wrap-restful-format]]<% endif %>

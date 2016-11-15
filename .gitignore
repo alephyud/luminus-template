@@ -7,3 +7,6 @@ pom.xml.asc
 .*
 /target/
 *.iml
+
+*.swp
+*.swo

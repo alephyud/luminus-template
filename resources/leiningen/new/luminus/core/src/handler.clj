@@ -1,6 +1,6 @@
 (ns <<project-ns>>.handler
   (:require [compojure.core :refer [routes wrap-routes]]<% if not service %>
-            [<<project-ns>>.layout :refer [error-page]]
+            [<<project-ns>>.views.layout :refer [error-page]]
             [<<project-ns>>.routes.home :refer [home-routes]]<% endif %><% if service-required %>
             <<service-required>><% endif %><% if oauth-required %>
             <<oauth-required>><% endif %>

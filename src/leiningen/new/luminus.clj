@@ -55,17 +55,12 @@
    ["src/clj/{{sanitized}}/config.clj" "core/src/config.clj"]
    ["src/clj/{{sanitized}}/handler.clj" "core/src/handler.clj"]
    ["src/clj/{{sanitized}}/routes/home.clj" "core/src/home.clj"]
-   ["src/clj/{{sanitized}}/layout.clj" "core/src/layout.clj"]
    ["src/clj/{{sanitized}}/middleware.clj" "core/src/middleware.clj"]
-
-   ;;HTML templates
-   ["resources/templates/base.html" "core/resources/templates/base.html"]
-   ["resources/templates/home.html" "core/resources/templates/home.html"]
-   ["resources/templates/about.html" "core/resources/templates/about.html"]
-   ["resources/templates/error.html" "core/resources/templates/error.html"]
+   ["src/clj/{{sanitized}}/views/layout.clj" "core/src/layout.clj"]
+   ["src/clj/{{sanitized}}/views/static_pages.clj" "core/src/static_pages.clj"]
 
    ;; public resources, example URL: /css/screen.css
-   ["resources/public/favicon.ico"  (resource "site/favicon.ico")]
+   ["resources/public/favicon.ico" "core/resources/favicon.ico"]
    ["resources/public/css/screen.css" "core/resources/css/screen.css"]
    ["resources/docs/docs.md" "core/resources/docs.md"]
    "resources/public/js"
@@ -92,8 +87,8 @@
 
 (def core-dependencies
   [['org.clojure/clojure "1.8.0"]
+   ['com.github.rjeschke/txtmark "0.13"]
    ['selmer "1.10.0"]
-   ['markdown-clj "0.9.90"]
    ['ring-middleware-format "0.7.0"]
    ['metosin/ring-http-response "0.8.0"]
    ['bouncer "1.0.0"]
@@ -114,7 +109,7 @@
 (defn generate-project
   "Create a new Luminus project"
   [options]
-  (main/info "Generating a Luminus project.")
+  (main/info "Generating a tailored Luminus project.")
   (let [[assets options]
         (-> [core-assets options]
             service-features
@@ -193,7 +188,9 @@
                              "+cljs" "+reagent" "+re-frame" "+auth" "+auth-jwe" "+site"
                              "+cucumber" "+sassc" "+cider" "+oauth"
                              "+swagger" "+war"
-                             "+kibit" "+service"}
+                             "+kibit" "+service"
+                             ;;tailored
+                             "+i18n" "+gulp" "+bootstrap"}
         options {:name              (project-name name)
                  :dependencies      core-dependencies
                  :selmer-renderer   render-template
