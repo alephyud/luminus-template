@@ -1,7 +1,7 @@
 (ns leiningen.new.common
   (:require
     [selmer.parser :as selmer]
-    [leiningen.new.templates :refer [renderer ->files]]
+    [leiningen.new.templates :refer [renderer render-text ->files]]
     [clojure.pprint :refer [code-dispatch pprint with-pprint-dispatch]]))
 
 (def dependency-indent 17)
@@ -27,8 +27,11 @@
 
 (defn render-asset [render options asset]
   (if (string? asset)
-    asset
+    (do
+      (println "Creating directory" (render-text asset options))
+      asset)
     (let [[target source] asset]
+      (println "Creating" (render-text target options))
       [target (render source options)])))
 
 (defn render-assets [render assets options]
