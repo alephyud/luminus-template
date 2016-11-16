@@ -3,7 +3,6 @@
             [clojure.tools.logging :as log]
             [<<project-ns>>.views.layout :refer [*app-context* error-page]]
             [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
-            [ring.middleware.webjars :refer [wrap-webjars]]
             [ring.middleware.format :refer [wrap-restful-format]]<% endif %>
             [<<project-ns>>.config :refer [env]]<% if immutant-session %>
             [ring.middleware.flash :refer [wrap-flash]]
@@ -98,8 +97,7 @@
 <% endif %>
 (defn wrap-base [handler]
   (-> ((:middleware defaults) handler)<% if auth-middleware-required %>
-      wrap-auth<% endif %><% if not service %>
-      wrap-webjars<% endif %><% if immutant-session %>
+      wrap-auth<% endif %><% if immutant-session %>
       wrap-flash
       (wrap-session {:cookie-attrs {:http-only true}})
       (wrap-defaults
