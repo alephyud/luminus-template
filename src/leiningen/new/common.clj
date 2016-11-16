@@ -1,6 +1,7 @@
 (ns leiningen.new.common
   (:require
     [selmer.parser :as selmer]
+    [clansi :refer [style]]
     [leiningen.new.templates :refer [renderer render-text ->files]]
     [clojure.pprint :refer [code-dispatch pprint with-pprint-dispatch]]))
 
@@ -28,10 +29,10 @@
 (defn render-asset [render options asset]
   (if (string? asset)
     (do
-      (println "Creating directory" (render-text asset options))
+      (println "Creating directory" (style (render-text asset options) :green))
       asset)
     (let [[target source] asset]
-      (println "Creating" (render-text target options))
+      (println "Creating" (style (render-text target options) :green))
       [target (render source options)])))
 
 (defn render-assets [render assets options]
