@@ -3,6 +3,7 @@
              :refer [name-to-path year
                      sanitize sanitize-ns project-name]]
             [clojure.java.io :as io]
+            [clansi :refer [style]]
             [leiningen.core.main :refer [leiningen-version]]
             [leiningen.core.main :as main]
             [leiningen.new.common :refer :all]
@@ -128,7 +129,9 @@
             logback-features
             oauth-features
             war-features)]
-    (render-assets (init-render) assets (format-options options))))
+    (render-assets (init-render) assets (format-options options))
+    (println (format "Project %s created."
+                     (style (:name options) :green)))))
 
 (defn format-features [features]
   (apply str (interpose ", " features)))
