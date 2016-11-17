@@ -1,0 +1,57 @@
+$navbar-default-bg = #12a
+$navbar-default-color = #eee
+$navbar-default-link-color = #eee
+$navbar-default-link-hover-color = lighten($navbar-default-link-color, 10%)
+$navbar-default-link-active-color = lighten($navbar-default-link-color, 15%)
+$navbar-default-link-active-bg = lighten($navbar-default-bg, 6.5%)
+$navbar-default-brand-hover-color = $navbar-default-link-hover-color
+$navbar-default-toggle-hover-bg = $navbar-default-link-active-bg
+$navbar-default-toggle-icon-bar-bg = $navbar-default-color
+$navbar-default-toggle-border-color = $navbar-default-color
+
+@import bootstrap
+
+/* footer */
+
+// http://ryanfait.com/resources/footer-stick-to-bottom-of-page/
+
+$footer-height = 40px
+$footer-margin = 15px
+
+*
+  margin 0
+
+html, body
+  height 100%
+
+.keep-footer-down
+  min-height 100%
+  height auto !important
+  height 100%
+  margin 0 auto -($footer-height + $footer-margin)
+
+.push-footer
+  height $footer-height
+
+.navbar
+  border-radius 0
+
+footer
+  margin-top $footer-margin
+  height $footer-height
+  padding-top 10px
+  border-top 1px solid #eaeaea
+  background-color #f0f0f0
+  color #777
+
+  a
+    color #555
+    &:hover
+      color #222
+
+  ul
+    float right
+    list-style none
+    li
+      float left
+      margin-left 15px

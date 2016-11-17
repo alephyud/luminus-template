@@ -1,0 +1,19 @@
+{
+  "name": "<<name>>-asset-pipeline",
+  "version": "0.1.0",
+  "description": "Gulp-powered asset pipeline for <<name>>",
+  "license": "FIXME: provide license",
+  "devDependencies": {
+    "bootstrap-styl": "^5.0.8",
+    "coffee-script": "^1.11.0",
+    "gulp": "^3.9.1",
+    "gulp-concat-css": "^2.3.0",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-stylus": "^2.5.0",
+    "gulp-util": "^3.0.7",
+    "browserify": "^13.1.0",
+    "coffeeify": "^2.0.1",
+    "debowerify": "^1.5.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
