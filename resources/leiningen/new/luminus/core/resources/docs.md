@@ -7,6 +7,9 @@ This page will help guide you through the first steps of building your site.
 The `home-routes` handler in the `<<project-ns>>.routes.home` namespace
 defines the route that invokes the `home-page` function whenever an HTTP
 request is made to the `/` URI using the `GET` method.
+
+**TODO: the docs no longer correspond to the project structure.**
+
 <% if cljs %>
 ```
 (defroutes home-routes

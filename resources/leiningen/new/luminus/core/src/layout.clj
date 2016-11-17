@@ -23,10 +23,10 @@
   [])
 
 (defn default-styles []
-  [])
+  ["/css/styles.css"])
 
 (defn default-scripts []
-  [])
+  ["/js/scripts.js"])
 
 (defn nav-entries []
   [{:k :home :text "Home" :path "/"}
@@ -40,15 +40,16 @@
       {:data-toggle "collapse" :data-target "#navbar-collapse"
        :type "button" :aria-expanded "false"}
       [:span.sr-only "Toggle navigation"]
-      (doall (repeat 3 [:span.icon-bar]))]]
+      (doall (repeat 3 [:span.icon-bar]))]
+     (link-to {:class :navbar-brand} "/" "<<name>>")]
     [:div#navbar-collapse.collapse.navbar-collapse
-     [:ul.navbar-nav.navbar-right
-      (for [{:keys [k text]} (nav-entries)]
+     [:ul.nav.navbar-nav.navbar-right
+      (for [{:keys [k text path]} (nav-entries)]
         [:li {:class (when (= k current-nav) "active")}
-         text])]]]])
+         (link-to path text)])]]]])
 
 (defn footer-layout [params]
-  [:footer.footer
+  [:div.container
    [:small "<<name>>, 2016."]])
 
 (defn base-layout
@@ -82,7 +83,7 @@
          ;; Don't forget to use ring.middleware.flash/wrap-flash
          [:div.content content]
          [:div.push-footer]]
-        [:div.footer.container (footer-layout params)]
+        [:footer.footer (footer-layout params)]
         (apply include-js scripts)]])))
 
 (defn error-page

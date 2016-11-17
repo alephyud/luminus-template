@@ -7,15 +7,14 @@
 (defn home-page []
   (layout/base-layout
     {:content
-     <% if cljs %>
-     "Please wait for the Clojurescript to load."
-     <% else %>
-     (-> "docs/docs.md" io/resource slurp Processor/process)
-     <% endif %>
-     }))
+     [:div.container
+     <% if cljs %> "Please wait for the Clojurescript to load."
+     <% else %> (-> "docs/docs.md" io/resource slurp Processor/process)
+     <% endif %>]}))
 
 (defn about-page []
   (layout/base-layout
     {:title "About"
      :content (html
-                [:p "This is the story of <<name>>... work in progress"])}))
+                [:div.container
+                 [:p "This is the story of <<name>>... work in progress"]])}))

@@ -22,6 +22,7 @@
             [leiningen.new.immutant :refer [immutant-features]]
             [leiningen.new.swagger :refer [swagger-features]]
             [leiningen.new.sassc :refer [sassc-features]]
+            [leiningen.new.gulp :refer [gulp-features]]
             [leiningen.new.site :refer [site-features]]
             [leiningen.new.war :refer [war-features]]
             [leiningen.new.kibit :refer [kibit-features]]
@@ -125,6 +126,7 @@
             http-kit-features
             immutant-features
             sassc-features
+            gulp-features
             kibit-features
             logback-features
             oauth-features
@@ -188,7 +190,7 @@
                              "+swagger" "+war"
                              "+kibit" "+service"
                              ;;tailored
-                             "+i18n" "+gulp" "+bootstrap"}
+                             "+i18n" "+gulp"}
         options {:name              (project-name name)
                  :dependencies      core-dependencies
                  :selmer-renderer   render-template
