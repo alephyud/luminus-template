@@ -23,6 +23,7 @@
             [leiningen.new.swagger :refer [swagger-features]]
             [leiningen.new.sassc :refer [sassc-features]]
             [leiningen.new.gulp :refer [gulp-features]]
+            [leiningen.new.i18n :refer [i18n-features]]
             [leiningen.new.site :refer [site-features]]
             [leiningen.new.war :refer [war-features]]
             [leiningen.new.kibit :refer [kibit-features]]
@@ -56,6 +57,7 @@
    ["src/clj/{{sanitized}}/core.clj" "core/src/core.clj"]
    ["src/clj/{{sanitized}}/config.clj" "core/src/config.clj"]
    ["src/clj/{{sanitized}}/handler.clj" "core/src/handler.clj"]
+   ["src/clj/{{sanitized}}/helpers.clj" "core/src/helpers.clj"]
    ["src/clj/{{sanitized}}/routes/home.clj" "core/src/home.clj"]
    ["src/clj/{{sanitized}}/middleware.clj" "core/src/middleware.clj"]
    ["src/clj/{{sanitized}}/views/layout.clj" "core/src/layout.clj"]
@@ -88,7 +90,9 @@
       (update-in [:dev-plugins] (partial indent dev-dependency-indent))))
 
 (def core-dependencies
-  [['org.clojure/clojure "1.8.0"]
+  [['medley "0.8.4"]
+   ['clj-time "0.12.2"]
+   ['org.clojure/clojure "1.8.0"]
    ['com.github.rjeschke/txtmark "0.13"]
    ['selmer "1.10.0"]
    ['ring-middleware-format "0.7.0"]
@@ -127,6 +131,7 @@
             immutant-features
             sassc-features
             gulp-features
+            i18n-features
             kibit-features
             logback-features
             oauth-features

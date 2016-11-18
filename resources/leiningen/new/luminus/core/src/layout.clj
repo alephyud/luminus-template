@@ -1,6 +1,8 @@
 (ns <<project-ns>>.views.layout
   (:require [clojure.string :as cs]
-            [clojure.pprint :as pp]
+            [clojure.pprint :as pp]<% if i18n %>
+            [<<project-ns>>.i18n :refer [t *page-language* local-url]]
+            [taoensso.tower :refer [with-tscope]]<% endif %>
             [ring.util.http-response :refer [content-type ok]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
             [ring.middleware.anti-forgery :refer [*anti-forgery-token*]]
@@ -26,12 +28,18 @@
   ["/css/styles.css"])
 
 (defn default-scripts []
-  ["/js/scripts.js"])
-
+  ["/js/scripts.js"<% if cljs %>
+   "/js/app.js"<% endif %>])
+<% if i18n %>
+(defn nav-entries []
+  (with-tscope :nav-menu
+  [{:k :home :text (t :home) :path "/"}
+   {:k :about :text (t :about) :path "/about"}]))
+<% else %>
 (defn nav-entries []
   [{:k :home :text "Home" :path "/"}
    {:k :about :text "About" :path "/about"}])
-
+<% endif %>
 (defn header-layout [{:keys [current-nav] :as params}]
   [:nav.navbar.navbar-default
    [:div.container.container-fluid
@@ -41,12 +49,12 @@
        :type "button" :aria-expanded "false"}
       [:span.sr-only "Toggle navigation"]
       (doall (repeat 3 [:span.icon-bar]))]
-     (link-to {:class :navbar-brand} "/" "<<name>>")]
+     (link-to {:class :navbar-brand} <% if i18n %>(local-url "/")<% else %>"/"<% endif %> "<<name>>")]
     [:div#navbar-collapse.collapse.navbar-collapse
      [:ul.nav.navbar-nav.navbar-right
       (for [{:keys [k text path]} (nav-entries)]
         [:li {:class (when (= k current-nav) "active")}
-         (link-to path text)])]]]])
+         (link-to <% if i18n %>(local-url path)<% else %>path<% endif %> text)])]]]])
 
 (defn footer-layout [params]
   [:div.container
@@ -66,11 +74,11 @@
         styles (or styles! (into (default-styles) styles))
         scripts (or scripts! (into (default-scripts) scripts))]
     ;; TODO: how to pass session? (flash, etc.)
-    (html5
+    (html5 <% if i18n %>{:lang *page-language*}<% endif %>
       [:html
        [:head
         [:meta {:http-equiv "Content-Type"
-                :content "text.html; charset=UTF-8"}]
+                :content "text/html; charset=UTF-8"}]
         [:meta {:name "viewport"
                 :content "width=device-width, initial-scale=1"}]
         [:title page-title]

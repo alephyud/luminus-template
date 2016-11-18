@@ -1,6 +1,9 @@
 (ns <<project-ns>>.middleware
   (:require [<<project-ns>>.env :refer [defaults]]<% if not service %>
+            [clojure.string :as cs]
             [clojure.tools.logging :as log]
+            [clj-time.core]
+            [ring.util.codec :refer [url-decode]]
             [<<project-ns>>.views.layout :refer [*app-context* error-page]]
             [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
             [ring.middleware.format :refer [wrap-restful-format]]<% endif %>
@@ -11,7 +14,8 @@
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]<% if auth-middleware-required %>
             <<auth-middleware-required>><% if auth-session %>
             <<auth-session>><% endif %><% if auth-jwe %>
-            <<auth-jwe>><% endif %><% endif %>)<% if not service %>
+            <<auth-jwe>><% endif %><% endif %><% if i18n %>
+            [<<project-ns>>.i18n :refer [with-language default-language]]<% endif %>)<% if not service %>
   (:import [javax.servlet ServletContext])<% endif %>)
 <% if not service %>
 (defn wrap-context [handler]
@@ -38,6 +42,28 @@
         (error-page {:status 500
                      :title "Something very bad has happened!"
                      :message "We've dispatched a team of highly trained gnomes to take care of the problem."})))))
+
+(defn wrap-simple-logger [handler]
+  (fn [req]
+    (let [start-time-pretty (clj-time.core/now)
+          start-time (. System (nanoTime))
+          log-rec (cs/join " "
+                           [start-time-pretty
+                            (or (get-in req [:headers "x-forwarded-for"])
+                                (:remote-addr req))
+                            (cs/upper-case (name (:request-method req)))
+                            (:uri req)
+                            (some->
+                              (:query-string req)
+                              ;; Prettify and add LTR mark for proper look.
+                              url-decode (str \u200E))])
+          res (handler req)]
+      (log/info
+        log-rec
+        (format " %d (%.1f ms)"
+                (:status res)
+                (/ (double (- (. System (nanoTime)) start-time)) 1e6)))
+      res)))
 
 (defn wrap-csrf [handler]
   (wrap-anti-forgery
@@ -94,9 +120,18 @@
         wrap-identity<% endif %>
         (wrap-authentication backend)
         (wrap-authorization backend))))
+<% endif %><% if i18n %>
+(defn wrap-language [handler lang]
+  (fn [request]
+    (with-language lang (handler request))))
+
+(defn wrap-default-language [handler]
+  (fn [request]
+    (with-language default-language (handler request))))
 <% endif %>
 (defn wrap-base [handler]
-  (-> ((:middleware defaults) handler)<% if auth-middleware-required %>
+  (-> ((:middleware defaults) handler)
+      wrap-simple-logger<% if auth-middleware-required %>
       wrap-auth<% endif %><% if immutant-session %>
       wrap-flash
       (wrap-session {:cookie-attrs {:http-only true}})

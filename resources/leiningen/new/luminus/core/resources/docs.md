@@ -8,65 +8,35 @@ The `home-routes` handler in the `<<project-ns>>.routes.home` namespace
 defines the route that invokes the `home-page` function whenever an HTTP
 request is made to the `/` URI using the `GET` method.
 
-**TODO: the docs no longer correspond to the project structure.**
-
 <% if cljs %>
-```
-(defroutes home-routes
-  (GET "/" []
-       (home-page))
-  (GET "/docs" []
-       (-> (response/ok (-> "docs/docs.md" io/resource slurp))
-           (response/header "Content-Type" "text/plain; charset=utf-8"))))
-```
+The route table relies on functions `home-page` function in the
+`<<project-ns>>.views.static-pages` namespace to render the HTML for this page.
 
-The `home-page` function will in turn call the `<<project-ns>>.layout/render` function
-to render the HTML content:
+The `home-page` function will in turn call the `<<project-ns>>.views.layout/base-layout` function
+to render the layout.
 
-```
-(defn home-page []
-  (layout/render "home.html"))
-```
-
-The page contains a link to the compiled ClojureScript found in the `target/cljsbuild/public` folder:
-
-```
-{% script "/js/app.js" %}
-```
+The page contains a link to the compiled ClojureScript found in the `target/cljsbuild/public` folder
+(**TODO**):
 
 The rest of this page is rendered by ClojureScript found in the `src/cljs/<<sanitized>>/core.cljs` file.
 
 <% else %>
-```
-(defroutes home-routes
-  (GET "/" [] (home-page))
-  (GET "/about" [] (about-page)))
-```
+The route table relies on functions `home-page` and `about-page` in the
+`<<project-ns>>.views.static-pages` namespace to render the two pages the
+site currently has.
 
-The `home-page` function will in turn call the `<<project-ns>>.layout/render` function
-to render the HTML content:
+The namespace `<<project-ns>>.views.layout` contains the code required to
+render the general page layout.
 
-```
-(defn home-page []
-  (layout/render
-    "home.html" {:docs (-> "docs/docs.md" io/resource slurp)}))
-```
+The `home-page` function will render the `<<project-ns>>.views.base-layout` function
+folder using a parameter map containing the `:content` key. This key points to the
+contents of the `resources/docs/docs.md` file containing these instructions,
+rendered as HTML and wrapped into a `div.container` tag.
 
-The `render` function will render the `home.html` template found in the `resources/templates`
-folder using a parameter map containing the `:docs` key. This key points to the
-contents of the `resources/docs/docs.md` file containing these instructions.
+Add other functions / namespaces to `<<project-ns>>.views` as your site
+evolves and new views appear.
 
-
-The HTML templates are written using [Selmer](https://github.com/yogthos/Selmer) templating engine.
-
-
-```
-<div class="row">
-  <div class="col-sm-12">
-    {{docs|markdown}}
-  </div>
-</div>
-```
+The HTML templates are written using [Hiccup](https://github.com/weavejester/hiccup) templating engine.
 
 <a class="btn btn-primary" href="http://www.luminusweb.net/docs/html_templating.md">learn more about HTML templating »</a>
 
