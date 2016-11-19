@@ -94,15 +94,39 @@
         [:footer.footer (footer-layout params)]
         (apply include-js scripts)]])))
 
+(defn- error-body
+  [{:keys [title message] :as error-details}]
+  [:div.container
+   [:h1 (or title "An error has occurred")]
+   [:div message]])
+
 (defn error-page
-  "error-details should be a map containing the following keys:
+  "The argument should be a map containing the following keys:
    :status - error status
    :title - error title (optional)
    :message - detailed error message (optional)
 
    returns a response map with the error page as the body
    and the status specified by the status key"
-  [error-details]
-  {:status  (:status error-details)
-   :headers {"Content-Type" "text/html; charset=utf-8"}
-   :body    (html5 [:pre (with-out-str (pp/pprint error-details))])})
+  [{:keys [status title] :as error-details}]
+  {:headers {"Content-Type" "text/html; charset=utf-8"}
+   :status  status
+   :body    (html5 <% if i18n %>{:lang *page-language*}<% endif %>
+               (base-layout {:title title
+                             :content (error-body error-details)}))})
+<% if i18n %>
+(defn error-404 []
+  (with-tscope :error-page
+    (error-page
+      {:status 404
+       :title (t :404-title)
+       :message (format (t :404-text) (local-url "/"))})))
+<% else %>
+(defn error-404 []
+  (error-page
+    {:status 404
+     :title "Page not found"
+     :message (html
+                [:p "The page you were looking for was not found."]
+                [:p (link-to "/" "Go to the home page")])}))
+<% endif %>

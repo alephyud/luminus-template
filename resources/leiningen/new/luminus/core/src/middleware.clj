@@ -15,7 +15,8 @@
             <<auth-middleware-required>><% if auth-session %>
             <<auth-session>><% endif %><% if auth-jwe %>
             <<auth-jwe>><% endif %><% endif %><% if i18n %>
-            [<<project-ns>>.i18n :refer [with-language default-language]]<% endif %>)<% if not service %>
+            [taoensso.tower :refer [with-tscope]]
+            [<<project-ns>>.i18n :refer [t with-language default-language]]<% endif %>)<% if not service %>
   (:import [javax.servlet ServletContext])<% endif %>)
 <% if not service %>
 (defn wrap-context [handler]
@@ -38,40 +39,52 @@
     (try
       (handler req)
       (catch Throwable t
-        (log/error t)
+        (log/error t)<% if i18n %>
+        (with-tscope :error-page
+          (error-page {:status 500
+                       :title (t :500-title)
+                       :message (t :500-text)}))<% else %>
         (error-page {:status 500
                      :title "Something very bad has happened!"
-                     :message "We've dispatched a team of highly trained gnomes to take care of the problem."})))))
+                     :message "We've dispatched a team of highly trained gnomes to take care of the problem."})<% endif %>))))
 
 (defn wrap-simple-logger [handler]
   (fn [req]
     (let [start-time-pretty (clj-time.core/now)
-          start-time (. System (nanoTime))
-          log-rec (cs/join " "
-                           [start-time-pretty
-                            (or (get-in req [:headers "x-forwarded-for"])
-                                (:remote-addr req))
-                            (cs/upper-case (name (:request-method req)))
-                            (:uri req)
-                            (some->
-                              (:query-string req)
-                              ;; Prettify and add LTR mark for proper look.
-                              url-decode (str \u200E))])
-          res (handler req)]
-      (log/info
-        log-rec
-        (format " %d (%.1f ms)"
-                (:status res)
-                (/ (double (- (. System (nanoTime)) start-time)) 1e6)))
+          start-time (System/nanoTime)
+          res (handler req)
+          end-time (System/nanoTime)
+          log-rec [start-time-pretty
+                   (or (get-in req [:headers "x-forwarded-for"])
+                       (:remote-addr req))
+                   (cs/upper-case (name (:request-method req)))
+                   (:uri req)
+                   (some-> (:query-string req)
+                           ;; Prettify and add LTR mark for proper look.
+                           url-decode (str \u200E))
+                   (format " %d (%.1f ms)"
+                           (:status res)
+                           (/ (double (- end-time start-time)) 1e6))]
+          log-str (cs/join " " log-rec)]
+      (case {:status res}
+        404 (log/warn log-str)
+        403 (log/warn log-str)
+        500 (log/error log-str)
+        (log/info log-str))
       res)))
 
 (defn wrap-csrf [handler]
   (wrap-anti-forgery
     handler
     {:error-response
-     (error-page
+     (error-page <% if i18n %>
+       (with-tscope :error-page
+         {:status 403
+          :title (t :403-csrf-title)
+          :content (t :403-csrf-text)}) <% else %>
        {:status 403
-        :title "Invalid anti-forgery token"})}))
+        :title "Invalid anti-forgery token"
+        :content "Your page could not be loaded. Please try to reload this page and see if the problem persists."}<% endif %>)}))
 
 (defn wrap-formats [handler]
   (let [wrapped (wrap-restful-format

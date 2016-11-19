@@ -1,9 +1,12 @@
 (ns <<project-ns>>.routes.home
-  (:require [<<project-ns>>.views.static-pages :refer [home-page about-page]]<% if i18n %>
-            [<<project-ns>>.i18n :refer [languages root-language]]
+  (:require [<<project-ns>>.views.static-pages :refer [home-page about-page]]
+            [<<project-ns>>.views.layout :refer [error-404]]<% if i18n %>
+            [<<project-ns>>.i18n :refer [languages root-language
+                                         with-language]]
             [<<project-ns>>.middleware :refer [wrap-language]]<% endif %>
             [<<project-ns>>.helpers :refer [md->html]]
             [compojure.core :refer [defroutes routes context GET]]
+            [compojure.route :refer [not-found]]
             [ring.util.http-response :as response]
             [clojure.java.io :as io]))
 
@@ -22,10 +25,10 @@
            (wrap-language site-routes root-language))
          (for [lang languages]
            (context (str "/" (name lang)) []
-             (-> (routes
-                   site-routes
-                   #_(GET "*" _ (page-404))) ;; i18n'd 404 page
-                 (wrap-language lang))))))
+             (routes
+               (wrap-language lang site-routes)
+               ;; Internationalized 404 page
+               (not-found (with-language lang (error-404))))))))
 <% else %>
 (def home-routes (routes site-routes api-routes))
 <% endif %>

@@ -95,6 +95,7 @@
    ['org.clojure/clojure "1.8.0"]
    ['com.github.rjeschke/txtmark "0.13"]
    ['selmer "1.10.0"]
+   ['enlive "1.1.6"]
    ['ring-middleware-format "0.7.0"]
    ['metosin/ring-http-response "0.8.0"]
    ['bouncer "1.0.0"]
