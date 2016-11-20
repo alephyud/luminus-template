@@ -8,17 +8,17 @@ nav-menu:
 home-page:
   welcome:
     en: Welcome!
-    ru: Добро пожаловать!
+    ru: Добро пожаловать!<% if cljs %>
   wait-cljs:
     en: Please wait for Clojurescript to load.
-    ru: Подождите, пока загрузятся скрипты.
+    ru: Подождите, пока загрузятся скрипты.<% endif %>
 about-page:
   heading:
     en: About
     ru: О сайте
   text!:
-    en: This is the story of tailoredtest... work in progress
-    ru: История проекта tailoredtest...
+    en: This is the story of <<name>>... work in progress
+    ru: История проекта <<name>>...
 error-page:
   404-title:
     en: Page not found
