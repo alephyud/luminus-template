@@ -1,0 +1,55 @@
+nav-menu:
+  home:
+    en: Home
+    ru: Главная
+  about:
+    en: About
+    ru: О сайте
+home-page:
+  welcome:
+    en: Welcome!
+    ru: Добро пожаловать!
+  wait-cljs:
+    en: Please wait for Clojurescript to load.
+    ru: Подождите, пока загрузятся скрипты.
+about-page:
+  heading:
+    en: About
+    ru: О сайте
+  text!:
+    en: This is the story of tailoredtest... work in progress
+    ru: История проекта tailoredtest...
+error-page:
+  404-title:
+    en: Page not found
+    ru: Страница не найдена
+  404-text!:
+    en: >
+      The page you were looking for was not found.
+
+      [Go to the home page](%s)
+    ru: >
+      Страницы, которую вы ищете, не существует.
+
+      [Перейти на главную страницу](%s)
+  403-csrf-title:
+    en: Invalid anti-forgery token
+    ru: Неправильный код CSRF
+  403-csrf-text!:
+    en: >
+      Your page could not be loaded.
+
+      Please try to reload this page and see if the problem persists.
+    ru: >
+      Не можем корректно загрузить страницу.
+
+      Попробуйте обновить страницу; возможно, это устранит проблему.
+  500-title:
+    en: Something very bad has happened!
+    ru: Случилось что-то очень плохое!
+  500-text!:
+    en: >
+      We've dispatched a team of highly trained gnomes to take care
+      of the problem.
+    ru: >
+      Мы направили группу специально обученных гномов, чтобы решить проблему.
