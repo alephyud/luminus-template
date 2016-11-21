@@ -11,3 +11,5 @@ profiles.clj
 .nrepl-port
 /log<% for item in gitignore %>
 <<item>><% endfor %>
+/node_modules
+/bower_components

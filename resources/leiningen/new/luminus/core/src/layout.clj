@@ -18,11 +18,25 @@
            [:meta {(if (re-find #"^(fb|og):" k) :property :name) k
                    :content v}])))
 
-;; Default metas, styles and scripts. Note that they are wrapped to functions
+;; Default metas, styles and scripts. Note that they are wrapped in functions
 ;; because they can be language-dependent.
 
 (defn default-metas []
-  [])
+  ;; TODO: i18n
+  (let [root-url "http://<<project-ns>>.com"]
+    ["title" "<<name>>"
+     "description" "An awesome new project!"
+     "keywords" "<<name>>, awesome"
+     "author" "me"
+     "og:type" "website"
+     "og:title" "<<name>> - a new cool app!"
+     "og:description" "Take a look at this!"
+     "og:url" index-url
+     "og:image" (str index-url "/title.jpg")
+     "twitter:card" "summary"
+     "twitter:url" index-url
+     "twitter:description" "Take a look at this!"
+     "twitter:image" (str index-url "/title.jpg")]))
 
 (defn default-styles []
   ["/css/styles.css"])
@@ -81,6 +95,7 @@
                 :content "text/html; charset=UTF-8"}]
         [:meta {:name "viewport"
                 :content "width=device-width, initial-scale=1"}]
+        [:meta {:http-equiv "X-UA-Compatible" :content "IE=edge"}]
         [:title page-title]
         (apply include-metas metas) 
         (apply include-css styles)]
