@@ -1,6 +1,6 @@
 (ns <<project-ns>>.handler
   (:require [compojure.core :refer [routes wrap-routes]]<% if not service %>
-            [<<project-ns>>.views.layout :refer [error-404]]
+            [<<project-ns>>.views.layout :refer [error-page error-404]]
             [<<project-ns>>.routes.home :refer [home-routes]]<% endif %><% if service-required %>
             <<service-required>><% endif %><% if oauth-required %>
             <<oauth-required>><% endif %>
@@ -36,11 +36,11 @@
 (def app-routes
   (routes<% if not service %>
     (-> #'home-routes
-        (wrap-routes middleware/wrap-csrf)
+        (wrap-routes middleware/wrap-csrf error-page)
         (wrap-routes middleware/wrap-formats))<% endif %><% if oauth-routes %>
     <<oauth-routes>><% endif %><% if service-routes %>
     <<service-routes>><% endif %>
     (route/not-found<% if service %> "page not found"<% else %> (error-404)<% endif %>)))
 
 
-(<% if war %>def app<% else %>defn app []<% endif %> (middleware/wrap-base #'app-routes))
+(<% if war %>def app<% else %>defn app []<% endif %> (middleware/wrap-base #'app-routes {:error-page error-page}))

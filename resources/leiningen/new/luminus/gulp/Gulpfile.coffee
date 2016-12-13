@@ -27,7 +27,7 @@ gulp.task 'js', ->
   .pipe gulp.dest 'resources/public/js'
 
 gulp.task 'watch', ->
-  gulp.watch 'src/styles/*.styl', ['css']
-  gulp.watch 'src/client/*.coffee', ['js']
+  gulp.watch './resources/stylus/*.styl', ['css']
+  gulp.watch './resources/coffee/*.coffee', ['js']
 
 gulp.task 'default', ['css', 'js']

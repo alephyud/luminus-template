@@ -10,9 +10,6 @@
             [hiccup.page :refer [include-js include-css html5]]
             [hiccup.element :refer [link-to]]))
 
-<% if auth-middleware-required %>(declare ^:dynamic *identity*)<% endif %>
-(declare ^:dynamic *app-context*)
-
 (defn include-metas [& metas]
   (doall (for [[k v] metas]
            [:meta {(if (re-find #"^(fb|og):" k) :property :name) k
@@ -38,12 +35,14 @@
      "twitter:description" "Take a look at this!"
      "twitter:image" (str index-url "/title.jpg")]))
 
+(def statics-revision "?revision=1")
+
 (defn default-styles []
-  ["/css/styles.css"])
+  [(str "/css/styles.css" statics-revision)])
 
 (defn default-scripts []
-  ["/js/scripts.js"<% if cljs %>
-   "/js/app.js"<% endif %>])
+  [(str "/js/scripts.js" statics-revision)<% if cljs %>
+   (str "/js/app.js" statics-revision)<% endif %>])
 <% if i18n %>
 (defn nav-entries []
   (with-tscope :nav-menu

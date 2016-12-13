@@ -18,6 +18,8 @@
             [taoensso.tower :refer [with-tscope]]
             [<<project-ns>>.i18n :refer [t with-language default-language]]<% endif %>)<% if not service %>
   (:import [javax.servlet ServletContext])<% endif %>)
+<% if auth-middleware-required %>(declare ^:dynamic *identity*)<% endif %>
+(declare ^:dynamic *app-context*)
 <% if not service %>
 (defn wrap-context [handler]
   (fn [request]
@@ -34,12 +36,12 @@
                 (:app-context env))]
       (handler request))))
 
-(defn wrap-internal-error [handler]
+(defn wrap-internal-error [handler error-page]
   (fn [req]
     (try
       (handler req)
-      (catch Throwable t
-        (log/error t)<% if i18n %>
+      (catch Throwable th
+        (log/error th)<% if i18n %>
         (with-tscope :error-page
           (error-page {:status 500
                        :title (t :500-title)
@@ -73,7 +75,7 @@
         (log/info log-str))
       res)))
 
-(defn wrap-csrf [handler]
+(defn wrap-csrf [handler error-page]
   (wrap-anti-forgery
     handler
     {:error-response
@@ -142,7 +144,7 @@
   (fn [request]
     (with-language default-language (handler request))))
 <% endif %>
-(defn wrap-base [handler]
+(defn wrap-base [handler {:keys [error-page]}]
   (-> ((:middleware defaults) handler)
       wrap-simple-logger<% if auth-middleware-required %>
       wrap-auth<% endif %><% if immutant-session %>
@@ -157,4 +159,4 @@
             (assoc-in [:security :anti-forgery] false)
             (assoc-in  [:session :store] (ttl-memory-store (* 60 30)))))<% endif %><% if not service %>
       wrap-context
-      wrap-internal-error<% endif %>))
+      (wrap-internal-error error-page)<% endif %>))

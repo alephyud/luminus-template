@@ -7,6 +7,6 @@
      (-> options
          (append-formatted :auth-session
                            [['buddy.auth.backends.session :refer ['session-backend]]
-                            [(symbol (str (:project-ns options) ".layout")) :refer ['*identity*]]]
+                            [(symbol (str (:project-ns options) ".middleware")) :refer ['*identity*]]]
                            plugin-indent))]
     state))
