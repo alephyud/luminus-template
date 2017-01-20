@@ -20,7 +20,7 @@
 
 (defn default-metas []
   ;; TODO: i18n
-  (let [root-url "http://<<project-ns>>.com"]
+  (let [index-url "http://<<project-ns>>.com"]
     ["title" "<<name>>"
      "description" "An awesome new project!"
      "keywords" "<<name>>, awesome"
